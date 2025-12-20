@@ -2,6 +2,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import SplashScreen from "@/components/SplashScreen.jsx";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,16 +16,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Elegance essence",
-  description: "A perfume Brand",
+  title: "Elegance Essence | Luxury Fragrances",
+  description: "Discover your signature scent with Elegance Essence.",
 };
 
 export default function RootLayout({
-  children,}) {
+  children,
+}) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans selection:bg-primary/20 selection:text-primary`}
       >
         <ThemeProvider
           attribute="class"
@@ -31,8 +34,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SplashScreen/>
-        {children}
+          <SplashScreen />
+          <Navbar />
+          {children}
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
