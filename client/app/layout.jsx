@@ -5,7 +5,7 @@ import SplashScreen from "@/components/SplashScreen.jsx";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { Auth0Provider } from '@auth0/nextjs-auth0/client';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans selection:bg-primary/20 selection:text-primary`}
       >
-        <UserProvider>
+        <Auth0Provider>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -42,7 +42,7 @@ export default function RootLayout({
             {children}
             <Footer />
           </ThemeProvider>
-        </UserProvider>
+        </Auth0Provider>
       </body>
     </html>
   );
