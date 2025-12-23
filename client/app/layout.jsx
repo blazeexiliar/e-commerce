@@ -4,8 +4,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import SplashScreen from "@/components/SplashScreen.jsx";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-import { Auth0Provider } from '@auth0/nextjs-auth0/client';
+import {
+  ClerkProvider,
+} from '@clerk/nextjs'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,24 +27,23 @@ export default function RootLayout({
   children,
 }) {
   return (
+    <ClerkProvider>
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans selection:bg-primary/20 selection:text-primary`}
       >
-        <Auth0Provider>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-            <SplashScreen />
             <Navbar />
             {children}
             <Footer />
           </ThemeProvider>
-        </Auth0Provider>
       </body>
     </html>
+    </ClerkProvider>
   );
 }
