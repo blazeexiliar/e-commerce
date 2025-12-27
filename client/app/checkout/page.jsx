@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChevronLeft, CheckCircle2, CreditCard, Truck, Banknote, Smartphone } from "lucide-react";
 import { useCart } from '@/lib/cart-context';
+import LocationMap from '@/components/LocationMap';
 
 export default function CheckoutPage() {
   const [isOrdered, setIsOrdered] = useState(false);
@@ -16,34 +17,48 @@ export default function CheckoutPage() {
   const [cvv, setCvv] = useState("");
   const [cardName, setCardName] = useState("");
   const [upiId, setUpiId] = useState("");
-  
+
+  // Address fields
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zip, setZip] = useState("");
+
   const {
     cartItems,
     clearCart,
     subtotal,
   } = useCart();
-  
+
+  // Handle location selection from map
+  const handleLocationSelect = (locationData) => {
+    setAddress(locationData.address);
+    setCity(locationData.city);
+    setState(locationData.state);
+    setZip(locationData.zip);
+  };
+
   const shipping = 15.0;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
-  
+
   const formatCardNumber = (value) => {
     const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
     const matches = v.match(/\d{4,16}/g);
     const match = (matches && matches[0]) || "";
     const parts = [];
-    
+
     for (let i = 0; i < match.length; i += 4) {
       parts.push(match.substring(i, i + 4));
     }
-    
+
     if (parts.length) {
       return parts.join(" ");
     } else {
       return value;
     }
   };
-  
+
   const formatExpiryDate = (value) => {
     const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
     if (v.length >= 2) {
@@ -51,39 +66,39 @@ export default function CheckoutPage() {
     }
     return v;
   };
-  
+
   const handleCardNumberChange = (e) => {
     const formatted = formatCardNumber(e.target.value);
     if (formatted.replace(/\s/g, "").length <= 16) {
       setCardNumber(formatted);
     }
   };
-  
+
   const handleExpiryChange = (e) => {
     const formatted = formatExpiryDate(e.target.value);
     if (formatted.replace(/\//g, "").length <= 4) {
       setExpiryDate(formatted);
     }
   };
-  
+
   const handleCvvChange = (e) => {
     const value = e.target.value.replace(/[^0-9]/gi, "");
     if (value.length <= 4) {
       setCvv(value);
     }
   };
-  
+
   const handlePlaceOrder = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     setTimeout(() => {
       setIsSubmitting(false);
       setIsOrdered(true);
       clearCart();
     }, 2000);
   };
-  
+
   if (isOrdered) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-4">
@@ -102,7 +117,7 @@ export default function CheckoutPage() {
       </div>
     );
   }
-  
+
   return (
     <main className="py-12 md:py-20 lg:py-24 bg-background">
       <div className="container mx-auto px-4">
@@ -123,11 +138,11 @@ export default function CheckoutPage() {
                 </h2>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="alex@example.com" 
-                    required 
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="alex@example.com"
+                    required
                     className="rounded-none border-t-0 border-l-0 border-r-0 focus-visible:ring-0 focus-visible:border-primary px-0 bg-transparent"
                   />
                 </div>
@@ -151,20 +166,44 @@ export default function CheckoutPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="address">Address</Label>
-                    <Input id="address" required className="rounded-none border-t-0 border-l-0 border-r-0 focus-visible:ring-0 focus-visible:border-primary px-0 bg-transparent" />
+                    <Input
+                      id="address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      required
+                      className="rounded-none border-t-0 border-l-0 border-r-0 focus-visible:ring-0 focus-visible:border-primary px-0 bg-transparent"
+                    />
                   </div>
                   <div className="grid grid-cols-3 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="city">City</Label>
-                      <Input id="city" required className="rounded-none border-t-0 border-l-0 border-r-0 focus-visible:ring-0 focus-visible:border-primary px-0 bg-transparent" />
+                      <Input
+                        id="city"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        required
+                        className="rounded-none border-t-0 border-l-0 border-r-0 focus-visible:ring-0 focus-visible:border-primary px-0 bg-transparent"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="state">State</Label>
-                      <Input id="state" required className="rounded-none border-t-0 border-l-0 border-r-0 focus-visible:ring-0 focus-visible:border-primary px-0 bg-transparent" />
+                      <Input
+                        id="state"
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        required
+                        className="rounded-none border-t-0 border-l-0 border-r-0 focus-visible:ring-0 focus-visible:border-primary px-0 bg-transparent"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="zip">ZIP Code</Label>
-                      <Input id="zip" required className="rounded-none border-t-0 border-l-0 border-r-0 focus-visible:ring-0 focus-visible:border-primary px-0 bg-transparent" />
+                      <Input
+                        id="zip"
+                        value={zip}
+                        onChange={(e) => setZip(e.target.value)}
+                        required
+                        className="rounded-none border-t-0 border-l-0 border-r-0 focus-visible:ring-0 focus-visible:border-primary px-0 bg-transparent"
+                      />
                     </div>
                   </div>
                 </div>
@@ -181,11 +220,10 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("card")}
-                    className={`p-4 border-2 transition-all flex flex-col items-center gap-2 ${
-                      paymentMethod === "card" 
-                        ? "border-primary bg-primary text-primary-foreground" 
+                    className={`p-4 border-2 transition-all flex flex-col items-center gap-2 ${paymentMethod === "card"
+                        ? "border-primary bg-primary text-primary-foreground"
                         : "border-border bg-card hover:border-muted-foreground"
-                    }`}
+                      }`}
                   >
                     <CreditCard className="h-6 w-6" />
                     <span className="text-xs uppercase tracking-wider font-bold">Card</span>
@@ -194,11 +232,10 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("upi")}
-                    className={`p-4 border-2 transition-all flex flex-col items-center gap-2 ${
-                      paymentMethod === "upi" 
-                        ? "border-primary bg-primary text-primary-foreground" 
+                    className={`p-4 border-2 transition-all flex flex-col items-center gap-2 ${paymentMethod === "upi"
+                        ? "border-primary bg-primary text-primary-foreground"
                         : "border-border bg-card hover:border-muted-foreground"
-                    }`}
+                      }`}
                   >
                     <Smartphone className="h-6 w-6" />
                     <span className="text-xs uppercase tracking-wider font-bold">UPI</span>
@@ -207,11 +244,10 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={() => setPaymentMethod("cod")}
-                    className={`p-4 border-2 transition-all flex flex-col items-center gap-2 ${
-                      paymentMethod === "cod" 
-                        ? "border-primary bg-primary text-primary-foreground" 
+                    className={`p-4 border-2 transition-all flex flex-col items-center gap-2 ${paymentMethod === "cod"
+                        ? "border-primary bg-primary text-primary-foreground"
                         : "border-border bg-card hover:border-muted-foreground"
-                    }`}
+                      }`}
                   >
                     <Banknote className="h-6 w-6" />
                     <span className="text-xs uppercase tracking-wider font-bold">COD</span>
@@ -224,10 +260,10 @@ export default function CheckoutPage() {
                     <div className="flex items-center gap-3 text-sm text-muted-foreground mb-4">
                       <CreditCard className="h-4 w-4" /> All transactions are secure and encrypted.
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="cardName">Cardholder Name</Label>
-                      <Input 
+                      <Input
                         id="cardName"
                         value={cardName}
                         onChange={(e) => setCardName(e.target.value)}
@@ -239,8 +275,8 @@ export default function CheckoutPage() {
 
                     <div className="space-y-2">
                       <Label htmlFor="card">Card Number</Label>
-                      <Input 
-                        id="card" 
+                      <Input
+                        id="card"
                         value={cardNumber}
                         onChange={handleCardNumberChange}
                         placeholder="0000 0000 0000 0000"
@@ -252,7 +288,7 @@ export default function CheckoutPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="expiry">Expiry Date</Label>
-                        <Input 
+                        <Input
                           id="expiry"
                           value={expiryDate}
                           onChange={handleExpiryChange}
@@ -263,7 +299,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="cvv">CVV</Label>
-                        <Input 
+                        <Input
                           id="cvv"
                           type="password"
                           value={cvv}
@@ -287,10 +323,10 @@ export default function CheckoutPage() {
                     <div className="flex items-center gap-3 text-sm text-muted-foreground mb-4">
                       <Smartphone className="h-4 w-4" /> Pay using your UPI ID
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="upiId">UPI ID</Label>
-                      <Input 
+                      <Input
                         id="upiId"
                         value={upiId}
                         onChange={(e) => setUpiId(e.target.value)}
@@ -321,7 +357,7 @@ export default function CheckoutPage() {
                     <div className="flex items-center gap-3 text-sm text-muted-foreground mb-4">
                       <Banknote className="h-4 w-4" /> Pay when you receive your order
                     </div>
-                    
+
                     <div className="bg-amber-50 border border-amber-200 p-4 space-y-2">
                       <h3 className="font-bold text-sm uppercase tracking-wider">Cash on Delivery</h3>
                       <ul className="text-sm text-foreground space-y-1">
@@ -339,9 +375,9 @@ export default function CheckoutPage() {
                 )}
               </section>
 
-              <Button 
+              <Button
                 onClick={handlePlaceOrder}
-                disabled={isSubmitting} 
+                disabled={isSubmitting}
                 className="w-full h-14 uppercase tracking-[0.2em] font-bold text-sm"
               >
                 {isSubmitting ? "Processing..." : paymentMethod === "cod" ? "Place Order (COD)" : "Complete Order"}

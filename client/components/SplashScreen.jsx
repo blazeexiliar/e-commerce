@@ -14,7 +14,7 @@ export default function SplashScreen() {
   const taglineRef = useRef(null);
   const flameRingRef = useRef(null);
 
-  // ✅ Generate particles safely
+  // Generate particles safely
   useEffect(() => {
     const generated = Array.from({ length: 50 }, (_, i) => ({
       id: i,
@@ -128,7 +128,7 @@ export default function SplashScreen() {
           ease: "power2.inOut",
         });
 
-      // ✅ scoped infinite animation
+      // Scoped infinite animation
       context.add(() => {
         gsap.to(".particle", {
           x: "random(-20,20)",
@@ -188,4 +188,46 @@ export default function SplashScreen() {
           ref={brandRef}
           className="flex justify-center text-8xl font-bold tracking-[0.2em]"
         >
-          {b
+          {blaze.map((letter, i) => (
+            <span
+              key={i}
+              className="letter"
+              style={{
+                color: "transparent",
+                WebkitTextStroke: "2px orange",
+                textShadow: "0 0 20px rgba(255,69,0,0.8)",
+              }}
+            >
+              {letter}
+            </span>
+          ))}
+        </h1>
+
+        <h2
+          ref={subBrandRef}
+          className="flex justify-center text-6xl font-light tracking-[0.3em] mt-4"
+        >
+          {exiliar.map((letter, i) => (
+            <span
+              key={i}
+              className="letter"
+              style={{
+                color: "white",
+                textShadow: "0 0 15px rgba(255,255,255,0.5)",
+              }}
+            >
+              {letter}
+            </span>
+          ))}
+        </h2>
+
+        <p
+          ref={taglineRef}
+          className="text-orange-300 text-sm tracking-[0.4em] mt-8 uppercase"
+        >
+          Ignite Your Essence
+        </p>
+      </div>
+    </div>
+  );
+}
