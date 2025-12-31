@@ -14,15 +14,18 @@ export default function SplashScreen() {
   const taglineRef = useRef(null);
   const flameRingRef = useRef(null);
 
-  // Generate particles safely
+  // Responsive particle generation
   useEffect(() => {
-    const generated = Array.from({ length: 50 }, (_, i) => ({
+    const count = window.innerWidth < 640 ? 25 : 50;
+
+    const generated = Array.from({ length: count }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
       size: Math.random() * 6 + 1,
       opacity: Math.random() * 0.5 + 0.3,
     }));
+
     setParticles(generated);
   }, []);
 
@@ -128,7 +131,6 @@ export default function SplashScreen() {
           ease: "power2.inOut",
         });
 
-      // Scoped infinite animation
       context.add(() => {
         gsap.to(".particle", {
           x: "random(-20,20)",
@@ -157,16 +159,20 @@ export default function SplashScreen() {
           "radial-gradient(ellipse at center, #1a0a0a 0%, #0a0000 100%)",
       }}
     >
+      {/* Flame Ring */}
       <div
         ref={flameRingRef}
-        className="absolute w-[600px] h-[600px] rounded-full blur-sm"
+        className="absolute rounded-full blur-sm"
         style={{
+          width: "min(90vw, 600px)",
+          height: "min(90vw, 600px)",
           background:
             "radial-gradient(circle, transparent 40%, rgba(255,69,0,.2) 60%, transparent 70%)",
           boxShadow: "0 0 100px rgba(255,69,0,.5)",
         }}
       />
 
+      {/* Particles */}
       {particles.map((p) => (
         <div
           key={p.id}
@@ -183,10 +189,15 @@ export default function SplashScreen() {
         />
       ))}
 
-      <div className="relative z-10 text-center">
+      {/* Text */}
+      <div className="relative z-10 text-center px-4">
         <h1
           ref={brandRef}
-          className="flex justify-center text-8xl font-bold tracking-[0.2em]"
+          className="flex justify-center font-bold"
+          style={{
+            fontSize: "clamp(2.5rem, 8vw, 6rem)",
+            letterSpacing: "0.2em",
+          }}
         >
           {blaze.map((letter, i) => (
             <span
@@ -205,7 +216,11 @@ export default function SplashScreen() {
 
         <h2
           ref={subBrandRef}
-          className="flex justify-center text-6xl font-light tracking-[0.3em] mt-4"
+          className="flex justify-center font-light mt-4"
+          style={{
+            fontSize: "clamp(1.8rem, 6vw, 4rem)",
+            letterSpacing: "0.25em",
+          }}
         >
           {exiliar.map((letter, i) => (
             <span
@@ -223,7 +238,11 @@ export default function SplashScreen() {
 
         <p
           ref={taglineRef}
-          className="text-orange-300 text-sm tracking-[0.4em] mt-8 uppercase"
+          className="text-orange-300 uppercase mt-6"
+          style={{
+            fontSize: "clamp(0.65rem, 2vw, 0.9rem)",
+            letterSpacing: "0.35em",
+          }}
         >
           Ignite Your Essence
         </p>
